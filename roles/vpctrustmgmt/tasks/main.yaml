@@ -1,0 +1,20 @@
+---
+- name: Find /root/.ssh/ contain [id_rsa,id_rsa.pub]
+  find: paths=/root/.ssh patterns='id_rsa*'
+  register: result
+
+- name: debug
+  debug: msg="{{ result }}"
+
+- name: generate  id_rsa and id_rsa.pub of magmt-ansible-tower server 
+  shell: ssh-keygen -f /root/.ssh/id_rsa -t rsa -N ''
+  when: result.matched != 2
+  
+- name: set  trush  between magmt-ansible-tower and openshift-ansible-tower
+  expect:  
+    command: ssh-copy-id  -o StrictHostKeyChecking=no -i /root/.ssh/id_rsa.pub root@"{{ item }}"
+    timeout: 90
+    responses: 
+      (?i)password: '{{ password }}' 
+  with_items: "{{ groups['vpc-ansible-tower'] }}"
+

@@ -1,0 +1,29 @@
+---
+- name: delete directory /etc/yum.repos.d/
+  file: path=/etc/yum.repos.d/ state=absent
+
+- name: create directory /etc/yum.repos.d/
+  file: path=/etc/yum.repos.d/ state=directory owner=root group=root mode=0755
+
+- name: copy tower-dep.repo to /etc/yum.repos.d/
+  copy: src=tower-dep.repo dest=/etc/yum.repos.d/ owner=root group=root mode=0755
+
+- name: remove software git 
+  yum: name=git state=absent
+
+- name: install software for ansibletower
+  yum: name={{ item }} state=present
+  with_items:
+    - ansible
+    - docker
+    - python-pip
+    - nodejs
+    - git2u
+    - docker
+
+
+- name: Update software pip
+  pip: name={{ item }} state=latest
+  with_items:
+    - pip
+    - docker
