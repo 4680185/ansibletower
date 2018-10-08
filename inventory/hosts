@@ -1,0 +1,22 @@
+[vpc-ansible-tower]
+172.18.1.254
+[all:vars]
+
+
+dockerhub_base=ansible
+dockerhub_version=latest
+
+
+# Common Docker parameters
+postgres_data_dir=/opt/pgdocker
+host_port=80
+
+pg_username=vpcawx
+pg_password=vpcawxpass
+pg_database=vpcawx
+pg_port=5432
+
+# AWX Secret key
+# It's *very* important that this stay the same between upgrades or you will lose the ability to decrypt
+# your credentials
+secret_key=awxsecret
